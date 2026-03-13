@@ -1,6 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
+const papers = [
+  {
+    slug: 'predicting-movie-revenue',
+    title: 'Predicting Movie Revenue Using Multivariate Big Data Analytics',
+    subtitle: 'A Case Study in the Film Industry',
+    authors: 'Ganesh Parajuli, Mandip Raut',
+    institution: 'Herald College, Kathmandu',
+    year: '2024',
+    tags: ['Big Data', 'Machine Learning', 'Random Forest', 'Revenue Prediction', 'Film Industry'],
+    abstract:
+      'The global film industry generates billions in annual box-office revenue, yet accurately forecasting a movie\'s financial performance remains elusive due to the complex interplay of production budgets, audience preferences, and market dynamics. This study applies multivariate big data analytics to a comprehensive dataset of 10,387 films released between 1980 and 2023. Two predictive models—Multiple Linear Regression and Random Forest Regressor—were developed and evaluated. The Random Forest model achieved R² = 0.66, substantially outperforming the linear baseline (R² = 0.50), with production budget, popularity, and vote count identified as the strongest predictors.',
+    pdfUrl: '/2331188_Ganesh_Parajuli.pdf',
+  },
+]
+
 const INTRO_DURATION_MS = 7000
 
 const usePrefersReducedMotion = () => {
@@ -93,6 +108,28 @@ function App() {
   const prefersReducedMotion = usePrefersReducedMotion()
   const [introDone, setIntroDone] = useState(prefersReducedMotion)
   const trailRef = useRef<HTMLCanvasElement | null>(null)
+  const [activePaperSlug, setActivePaperSlug] = useState<string | null>(null)
+
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hash = window.location.hash
+      const match = hash.match(/^#research\/(.+)$/)
+      setActivePaperSlug(match ? match[1] : null)
+    }
+    syncFromHash()
+    window.addEventListener('hashchange', syncFromHash)
+    return () => window.removeEventListener('hashchange', syncFromHash)
+  }, [])
+
+  const openPaper = (slug: string) => {
+    window.location.hash = `research/${slug}`
+  }
+
+  const closePaper = () => {
+    window.location.hash = 'research'
+  }
+
+  const activePaper = papers.find((p) => p.slug === activePaperSlug) ?? null
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -334,6 +371,7 @@ function App() {
             <a href="#work">Experience</a>
             <a href="#skills">Skills</a>
             <a href="#education">Education</a>
+            <a href="#research">Research</a>
             <a href="#contact">Contact</a>
           </nav>
           <a className="header-cta" href="mailto:ganeshparajuli2059@gmail.com">
@@ -454,6 +492,51 @@ function App() {
             </div>
           </section>
 
+          <section className="section" id="research">
+            <div className="section-heading">
+              <h2>Research</h2>
+              <p>Published work in data science and machine learning.</p>
+            </div>
+            <div className="research-grid">
+              {papers.map((paper) => (
+                <article key={paper.slug} className="research-card experience-card">
+                  <div className="research-card-header">
+                    <div className="research-tags">
+                      {paper.tags.map((tag) => (
+                        <span key={tag} className="research-tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="date">{paper.year}</span>
+                  </div>
+                  <h3 className="research-title">{paper.title}</h3>
+                  <p className="research-subtitle">{paper.subtitle}</p>
+                  <p className="research-authors">
+                    {paper.authors} · {paper.institution}
+                  </p>
+                  <p className="research-abstract">{paper.abstract}</p>
+                  <button
+                    className="research-read-btn"
+                    type="button"
+                    onClick={() => openPaper(paper.slug)}
+                  >
+                    Read Paper
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path
+                        d="M3 8h10M9 4l4 4-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </article>
+              ))}
+            </div>
+          </section>
+
           <section className="section contact" id="contact">
             <div>
               <h2>Let&apos;s build something thoughtful.</h2>
@@ -472,6 +555,42 @@ function App() {
 
         <footer className="site-footer">Designed and built by Ganesh Parajuli - 2026</footer>
       </div>
+
+      {activePaper && (
+        <div className="paper-overlay" role="dialog" aria-modal="true" aria-label={activePaper.title}>
+          <div className="paper-overlay-header">
+            <div className="paper-overlay-meta">
+              <span className="paper-overlay-title">{activePaper.title}</span>
+              <span className="paper-overlay-authors">
+                {activePaper.authors} · {activePaper.institution} · {activePaper.year}
+              </span>
+            </div>
+            <div className="paper-overlay-actions">
+              <a
+                className="paper-download-btn"
+                href={activePaper.pdfUrl}
+                download
+                aria-label="Download PDF"
+              >
+                Download PDF
+              </a>
+              <button
+                className="paper-close-btn"
+                type="button"
+                onClick={closePaper}
+                aria-label="Close paper"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          <iframe
+            className="paper-iframe"
+            src={activePaper.pdfUrl}
+            title={activePaper.title}
+          />
+        </div>
+      )}
     </div>
   )
 }
