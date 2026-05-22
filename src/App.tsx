@@ -1,27 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import './App.css'
-
-const papers = [
-  {
-    slug: 'predicting-movie-revenue',
-    title: 'Predicting Movie Revenue Using Multivariate Big Data Analytics',
-    subtitle: 'A Case Study in the Film Industry',
-    authors: 'Ganesh Parajuli, Mandip Raut',
-    institution: 'Herald College, Kathmandu',
-    year: '2024',
-    tags: ['Big Data', 'Machine Learning', 'Random Forest', 'Revenue Prediction', 'Film Industry'],
-    abstract:
-      "The global film industry generates billions in annual box-office revenue, yet accurately forecasting a movie's financial performance remains elusive due to the complex interplay of production budgets, audience preferences, and market dynamics. This study applies multivariate big data analytics to a comprehensive dataset of 10,387 films released between 1980 and 2023. Two predictive models—Multiple Linear Regression and Random Forest Regressor—were developed and evaluated. The Random Forest model achieved R² = 0.66, substantially outperforming the linear baseline (R² = 0.50), with production budget, popularity, and vote count identified as the strongest predictors.",
-    pdfUrl: '/2331188_Ganesh_Parajuli.pdf',
-  },
-]
-
+import skillsReference from './assets/Desktop - 17.png'
+import experienceHeading from './assets/Group 17.png'
+import experienceBlobLeft from './assets/Rectangle 1.png'
+import experienceBlobRight from './assets/Rectangle 2.png'
+
 const experiences = [
   {
     title: 'Full Stack Developer / Product Designer',
     company: 'Blynt Tech',
     location: 'Kathmandu',
-    date: '2025',
+    date: 'Jun 2025 - Mar 2026',
     bullets: [
       'Designed and built HimalayanUltra, a racing trail platform with event listings, registrations, and winner highlights.',
       'Designed and built RaceTiming, a company portfolio website with service discovery and inquiry flows.',
@@ -29,10 +18,10 @@ const experiences = [
     ],
   },
   {
-    title: 'UI/UX Designer → Team Lead',
-    company: 'Void Nepal Pvt Ltd + Codynn',
+    title: 'UI/UX Designer -> Team Lead',
+    company: 'Void Nepal Pvt Ltd · Codynn',
     location: 'Sukedhara-04, Kathmandu',
-    date: 'Jun 2022 – Mar 2025',
+    date: 'Jun 2022 - Mar 2025',
     bullets: [
       'Started as a UI/UX designer and progressed into a leadership role managing design and content delivery.',
       'Led teams to ship web and mobile experiences with consistent design systems and clear handoffs.',
@@ -44,7 +33,7 @@ const experiences = [
     title: 'UI/UX Designer',
     company: 'FlipIQ',
     location: 'Kathmandu',
-    date: 'Sep 2025 – Dec 2025',
+    date: 'Sep 2025 - Dec 2025',
     bullets: [
       'Designed a real-estate software platform connecting buyers, sellers, and agents.',
       'Delivered website flows for uploading listings plus buying and selling properties.',
@@ -53,329 +42,139 @@ const experiences = [
   },
 ]
 
-const skillGroups = [
-  {
-    category: 'Frontend',
-    skills: ['TypeScript & JavaScript', 'React & MERN Stack', 'Front-end Engineering', 'Responsive & Accessible Design'],
-  },
-  {
-    category: 'Backend',
-    skills: ['Node.js & Express', 'MongoDB & REST APIs', 'Back-end Integration'],
-  },
-  {
-    category: 'Mobile',
-    skills: ['Flutter App Development'],
-  },
-  {
-    category: 'Design',
-    skills: ['UI/UX Design & Prototyping', 'Design Systems & Style Guides', 'Full Stack Development'],
-  },
-]
-
-const highlights = [
-  { label: 'Years in Product', value: '3+' },
-  { label: 'Teams Led', value: '3+' },
-  { label: 'Projects Built', value: '6+' },
-]
-
 function App() {
-  const [activePaperSlug, setActivePaperSlug] = useState<string | null>(null)
-  const revealRef = useRef<IntersectionObserver | null>(null)
+  const sectionObserverRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
-    const syncFromHash = () => {
-      const hash = window.location.hash
-      const match = hash.match(/^#research\/(.+)$/)
-      setActivePaperSlug(match ? match[1] : null)
-    }
-    syncFromHash()
-    window.addEventListener('hashchange', syncFromHash)
-    return () => window.removeEventListener('hashchange', syncFromHash)
-  }, [])
+    const sections = Array.from(document.querySelectorAll('.section-animate'))
+    if (!sections.length) return
 
-  const openPaper = (slug: string) => {
-    window.location.hash = `research/${slug}`
-  }
-
-  const closePaper = () => {
-    window.location.hash = 'research'
-  }
-
-  const activePaper = papers.find((p) => p.slug === activePaperSlug) ?? null
-
-  useEffect(() => {
-    const cards = Array.from(document.querySelectorAll('.reveal-card'))
-    if (!cards.length) return
-
-    revealRef.current = new IntersectionObserver(
+    sectionObserverRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible')
-            revealRef.current?.unobserve(entry.target)
+            sectionObserverRef.current?.unobserve(entry.target)
           }
         })
       },
-      { threshold: 0.12 },
+      { threshold: 0.25 },
     )
 
-    cards.forEach((card, index) => {
-      card.setAttribute('style', `--reveal-delay: ${index * 80}ms`)
-      revealRef.current?.observe(card)
-    })
+    sections.forEach((section) => sectionObserverRef.current?.observe(section))
 
-    return () => revealRef.current?.disconnect()
+    return () => sectionObserverRef.current?.disconnect()
   }, [])
 
   return (
     <div className="app">
-      <div className="page">
-        <header className="site-header">
-          <div className="logo wordmark">Ganesh Parajuli</div>
-          <nav className="nav">
-            <a href="#research">Research</a>
-            <a href="#work">Experience</a>
-            <a href="#skills">Skills</a>
-            <a href="#education">Education</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <a className="header-cta" href="mailto:ganeshparajuli2059@gmail.com">
-            Let&apos;s talk
-          </a>
-        </header>
+      <main>
+        <section className="hero" id="about">
+          <div className="hero-stage">
+            <span className="hero-name">Ganesh Parajuli</span>
+            <span className="hero-email">parajuliganesh44@gmail.com</span>
 
-        <main>
-          {/* ── Hero ── */}
-          <section className="hero" id="top">
-            <div className="hero-text">
-              <p className="eyebrow">Full Stack Developer · Product Designer</p>
-              <h1>
-                Ganesh <span className="accent">Parajuli</span>
-              </h1>
-              <p className="lead">
-                Full stack developer with a design foundation, building modern web apps, mobile
-                products, and user-first platforms.
-              </p>
-              <div className="hero-actions">
-                <a className="btn-primary" href="#work">
-                  View experience
-                </a>
-                <a className="btn-ghost" href="#contact">
-                  Contact me
-                </a>
-              </div>
-              <div className="hero-meta">
-                <span>📍 Sukedhara-04, Kathmandu</span>
-                <span>📞 9843047262</span>
-                <span>✉️ ganeshparajuli2059@gmail.com</span>
-              </div>
-            </div>
+            <img className="hero-wordmark" src="/portfolio-text.png" alt="Portfolio" />
 
-            <div className="hero-panel">
-              <div className="hero-image">
-                <img src="/profile.jpg" alt="Ganesh Parajuli" />
-              </div>
-              <h2 className="hero-panel-heading">Builds that blend UX and code</h2>
-              <p className="hero-panel-body">
-                I design, prototype, and ship full stack experiences that help teams move faster
-                while keeping interfaces polished and easy to use.
-              </p>
-              <div className="highlights">
-                {highlights.map((item) => (
-                  <div key={item.label} className="highlight-card">
-                    <span className="highlight-value">{item.value}</span>
-                    <span className="highlight-label">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+            <img className="hero-portrait" src="/portrait-cutout.png" alt="Ganesh Parajuli" />
 
-          {/* ── Research ── */}
-          <section className="section" id="research">
-            <div className="section-heading">
-              <div>
-                <span className="section-tag">Published Work</span>
-                <h2>Research</h2>
-              </div>
-              <p>Applied data science and machine learning in the film industry.</p>
-            </div>
-            <div className="research-grid">
-              {papers.map((paper) => (
-                <article key={paper.slug} className="research-card reveal-card">
-                  <div className="research-card-top">
-                    <div className="research-tags">
-                      {paper.tags.map((tag) => (
-                        <span key={tag} className="research-tag">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="research-year">{paper.year}</span>
-                  </div>
-                  <h3 className="research-title">{paper.title}</h3>
-                  <p className="research-subtitle">{paper.subtitle}</p>
-                  <p className="research-authors">
-                    {paper.authors} &middot; {paper.institution}
-                  </p>
-                  <p className="research-abstract">{paper.abstract}</p>
-                  <button
-                    className="btn-primary research-read-btn"
-                    type="button"
-                    onClick={() => openPaper(paper.slug)}
-                  >
-                    Read Paper
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path
-                        d="M3 8h10M9 4l4 4-4 4"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          {/* ── Experience ── */}
-          <section className="section" id="work">
-            <div className="section-heading">
-              <div>
-                <span className="section-tag">Career</span>
-                <h2>Experience</h2>
-              </div>
-              <p>Full stack delivery, design leadership, and product execution.</p>
-            </div>
-            <div className="experience-grid">
-              {experiences.map((role) => (
-                <article key={role.title + role.company} className="experience-card reveal-card">
-                  <div className="experience-header">
-                    <div>
-                      <h3>{role.title}</h3>
-                      <p className="experience-company">
-                        {role.company} &middot; {role.location}
-                      </p>
-                    </div>
-                    <span className="date-badge">{role.date}</span>
-                  </div>
-                  <ul>
-                    {role.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          {/* ── Skills ── */}
-          <section className="section section-alt" id="skills">
-            <div className="section-heading">
-              <div>
-                <span className="section-tag">Expertise</span>
-                <h2>Skills</h2>
-              </div>
-              <p>Tools and methods that shape my workflow.</p>
-            </div>
-            <div className="skills-section">
-              {skillGroups.map((group) => (
-                <div key={group.category} className="skill-group reveal-card">
-                  <h4 className="skill-category">{group.category}</h4>
-                  <div className="skill-pills">
-                    {group.skills.map((skill) => (
-                      <span key={skill} className="skill-pill">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ── Education ── */}
-          <section className="section" id="education">
-            <div className="section-heading">
-              <div>
-                <span className="section-tag">Background</span>
-                <h2>Education &amp; Training</h2>
-              </div>
-              <p>Continuous growth in design and technology.</p>
-            </div>
-            <div className="two-column">
-              <div className="info-card reveal-card">
-                <span className="info-card-tag">Degree</span>
-                <h3>Bachelor in Computer Science</h3>
-                <p>Herald College · Kathmandu</p>
-                <span className="info-card-date">Nov 2022 – Sep 2025</span>
-              </div>
-              <div className="info-card reveal-card">
-                <span className="info-card-tag">Training</span>
-                <h3>Full Stack Development</h3>
-                <p>Herald College</p>
-                <span className="info-card-date">2023</span>
-              </div>
-              <div className="info-card reveal-card">
-                <span className="info-card-tag">Training</span>
-                <h3>UI/UX Design</h3>
-                <p>Mindrisers Institute of Technology</p>
-                <span className="info-card-date">2022</span>
-              </div>
-            </div>
-          </section>
-
-          {/* ── Contact ── */}
-          <section className="section contact-section" id="contact">
-            <div className="contact-inner">
-              <div>
-                <span className="section-tag">Get in touch</span>
-                <h2>Let&apos;s build something thoughtful.</h2>
-                <p>
-                  Open to full stack roles, product teams, and ambitious projects. I respond quickly
-                  and enjoy solving real-world workflows.
-                </p>
-              </div>
-              <div className="contact-card">
-                <a href="mailto:ganeshparajuli2059@gmail.com" className="contact-link">
-                  ganeshparajuli2059@gmail.com
-                </a>
-                <span>Phone: 9843047262</span>
-                <span>Location: Sukedhara-04, Kathmandu</span>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        <footer className="site-footer">
-          <span>Designed &amp; built by Ganesh Parajuli · 2026</span>
-        </footer>
-      </div>
-
-      {/* ── Research Paper Overlay ── */}
-      {activePaper && (
-        <div className="paper-overlay" role="dialog" aria-modal="true" aria-label={activePaper.title}>
-          <div className="paper-overlay-header">
-            <div className="paper-overlay-meta">
-              <span className="paper-overlay-title">{activePaper.title}</span>
-              <span className="paper-overlay-authors">
-                {activePaper.authors} · {activePaper.institution} · {activePaper.year}
-              </span>
-            </div>
-            <div className="paper-overlay-actions">
-              <a className="paper-download-btn" href={activePaper.pdfUrl} download>
-                Download PDF
+            <div className="hero-social">
+              <a href="https://www.instagram.com/ganeshparajuli44" target="_blank" rel="noreferrer">
+                <svg className="hero-ig" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+                <span>ganeshparajuli44</span>
               </a>
-              <button className="paper-close-btn" type="button" onClick={closePaper} aria-label="Close">
-                ✕
-              </button>
+              <a href="https://www.linkedin.com/in/ganesh-parajuli" target="_blank" rel="noreferrer">
+                <svg className="hero-ln" viewBox="0 32 448 448" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"
+                  />
+                </svg>
+                <span>Ganesh Parajuli</span>
+              </a>
+            </div>
+
+            <span className="hero-role">Full Stack Developer · Product Designer</span>
+          </div>
+        </section>
+
+        {/* Who am I */}
+        <section className="whoami-section section-animate" id="whoami">
+          <div className="whoami-stage">
+            <h2 className="whoami-sr">Who am I</h2>
+
+            <img className="whoami-who" src="/who.png" alt="" aria-hidden="true" />
+            <img className="whoami-am" src="/am.png" alt="" aria-hidden="true" />
+            <img className="whoami-i" src="/i.png" alt="" aria-hidden="true" />
+
+            <img className="whoami-portrait" src="/portrait-full.png" alt="Ganesh Parajuli" />
+
+            <p className="whoami-bio">
+              I am a full-stack product architect who pairs AI-augmented development
+              with a deep understanding of software architecture to ship polished
+              interfaces at supersonic speeds. As a cybersecurity tutor, I bring an
+              adversarial mindset to the design process, ensuring everything I build is
+              secure by design. I bridge the gap between rapid execution, intuitive UX,
+              and robust defense. Ultimately, I build tools that help teams move at the
+              speed of thought without ever breaking the system.
+            </p>
+
+            <div className="whoami-stats">
+              <div className="stat-circle stat-olive">
+                <span className="stat-value">3<sup>+</sup></span>
+                <span className="stat-label">years in<br />product</span>
+              </div>
+              <div className="stat-circle stat-muted">
+                <span className="stat-value">6<sup>+</sup></span>
+                <span className="stat-label">projects<br />built</span>
+              </div>
+              <div className="stat-circle stat-olive">
+                <span className="stat-value">3<sup>+</sup></span>
+                <span className="stat-label">teams<br />led</span>
+              </div>
             </div>
           </div>
-          <iframe className="paper-iframe" src={activePaper.pdfUrl} title={activePaper.title} />
-        </div>
-      )}
+        </section>
+
+        {/* Experience */}
+        <section className="exp-section section-animate" id="work">
+          <div className="exp-stage">
+            <img className="exp-heading" src={experienceHeading} alt="Experience" />
+            {experiences.slice(0, 2).map((role, idx) => (
+              <article key={role.title} className={`exp-card exp-card-${idx + 1}`}>
+                <img
+                  className="exp-blob"
+                  src={idx === 0 ? experienceBlobLeft : experienceBlobRight}
+                  alt=""
+                  aria-hidden="true"
+                />
+                <div className="exp-card-content">
+                  <div className="exp-card-top">
+                    <span className="exp-num">{String(idx + 1).padStart(2, '0')}</span>
+                    <div className="exp-card-info">
+                      <strong className="exp-title">{role.title}</strong>
+                      <em className="exp-meta">{role.company} · {role.location} / {role.date}</em>
+                    </div>
+                  </div>
+                  <ul className="exp-bullets">
+                    {role.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="skills-section section-animate" id="skills">
+          <img className="skills-reference" src={skillsReference} alt="Skill overview: frontend, design, mobile, and backend" />
+        </section>
+      </main>
     </div>
   )
 }
