@@ -102,6 +102,8 @@ main {
   animation: hero-fade 0.7s ease 1.05s both;
 }
 
+/* Entrance + scroll parallax for the wordmark are driven by Framer Motion
+   (App.tsx). No CSS animation here so the two never fight over `transform`. */
 .hero-wordmark {
   position: absolute;
   top: 14.6%;
@@ -109,22 +111,19 @@ main {
   width: 95%;
   height: auto;
   z-index: 1;
-  animation:
-    hero-wordmark-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both,
-    hero-wordmark-float 7s ease-in-out 1.3s infinite;
 }
 
+/* Centring (translateX(-50%)), entrance and parallax are all handled by
+   Framer Motion in App.tsx, which owns this element's `transform`. */
 .hero-portrait {
   position: absolute;
   left: 51%;
   bottom: 0;
   height: 74%;
   width: auto;
-  transform: translateX(-50%);
   z-index: 2;
   pointer-events: none;
   filter: drop-shadow(0 0.7cqw 1.6cqw rgba(34, 44, 24, 0.24));
-  animation: hero-portrait-in 1.15s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s both;
 }
 
 .hero-social {
@@ -169,22 +168,6 @@ main {
 
 .hero-ln {
   color: var(--hero-cream);
-}
-
-@keyframes hero-wordmark-in {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-
-@keyframes hero-wordmark-float {
-  0%,
-  100% { transform: translateY(0); }
-  50%  { transform: translateY(-0.5cqw); }
-}
-
-@keyframes hero-portrait-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(6%); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 @keyframes hero-fade {
@@ -460,19 +443,28 @@ main {
 /* Mobile fallback */
 @media (max-width: 768px) {
   .exp-section { min-height: auto; display: block; overflow: visible; padding: 42px 0 54px; }
-  .exp-stage { width: 100%; height: auto; min-height: 0; container-type: inline-size; overflow: visible; }
-  .exp-heading { position: static; width: 94%; height: auto; left: auto; top: auto; margin: 0 auto 18px; }
-  .exp-card { position: relative; width: min(108%, 720px); margin-bottom: 20px; }
-  .exp-card-1 { left: -8%; top: auto; }
-  .exp-card-2 { right: auto; left: 2%; top: auto; }
-  .exp-card-content { inset: 15% 13% 13% 13%; gap: 8px; }
-  .exp-num { font-size: clamp(2.4rem, 9vw, 3.8rem); }
-  .exp-title { font-size: clamp(1.45rem, 7vw, 2rem); }
-  .exp-meta { font-size: clamp(1.05rem, 4.4vw, 1.45rem); }
-  .exp-bullets li { font-size: clamp(0.98rem, 4vw, 1.25rem); padding-left: 14px; line-height: 1.05; }
-  .exp-card-top { gap: 10px; }
-  .exp-card-info { gap: 3px; padding-top: 6px; }
-  .exp-bullets { gap: 7px; }
+  .exp-stage { width: 100%; height: auto; min-height: 0; container-type: normal; overflow: visible; }
+  .exp-heading { position: static; width: min(94%, 620px); height: auto; left: auto; top: auto; margin: 0 auto 20px; display: block; }
+  .exp-card {
+    position: relative;
+    width: min(calc(100% - 22px), 680px);
+    margin: 0 auto 22px;
+    background: var(--olive-700);
+    border-radius: 34% 42% 36% 38% / 17% 21% 19% 22%;
+    padding: clamp(26px, 7vw, 42px) clamp(20px, 6vw, 38px);
+  }
+  .exp-card-1,
+  .exp-card-2 { left: auto; right: auto; top: auto; }
+  .exp-card-2 { border-radius: 38% 34% 42% 32% / 20% 18% 23% 19%; }
+  .exp-blob { display: none; }
+  .exp-card-content { position: static; inset: auto; gap: 12px; }
+  .exp-num { font-size: clamp(3rem, 15vw, 4.8rem); }
+  .exp-title { font-size: clamp(1.45rem, 7vw, 2.15rem); line-height: 0.95; }
+  .exp-meta { font-size: clamp(1.02rem, 4.8vw, 1.4rem); line-height: 1.06; }
+  .exp-bullets li { font-size: clamp(1rem, 4.6vw, 1.28rem); padding-left: 16px; line-height: 1.08; }
+  .exp-card-top { gap: 12px; }
+  .exp-card-info { gap: 4px; padding-top: 7px; }
+  .exp-bullets { gap: 9px; }
 }
 
 /* ── Skills section title (shared) ── */
@@ -497,100 +489,277 @@ main {
   display: block;
 }
 
-.section-animate .whoami-who,
-.section-animate .whoami-am,
-.section-animate .whoami-i,
-.section-animate .whoami-portrait,
-.section-animate .whoami-bio,
-.section-animate .whoami-stats,
-.section-animate .exp-heading,
-.section-animate .exp-card,
-.section-animate .skills-reference {
-  opacity: 0;
-  transform: translateY(3cqw);
-  transition:
-    opacity 0.8s ease,
-    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
-  will-change: opacity, transform;
-}
-
-.section-animate.is-visible .whoami-who,
-.section-animate.is-visible .whoami-am,
-.section-animate.is-visible .whoami-i,
-.section-animate.is-visible .whoami-portrait,
-.section-animate.is-visible .whoami-bio,
-.section-animate.is-visible .whoami-stats,
-.section-animate.is-visible .exp-heading,
-.section-animate.is-visible .exp-card,
-.section-animate.is-visible .skills-reference {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.section-animate .whoami-am,
-.section-animate .whoami-bio,
-.section-animate .exp-card-1 {
-  transition-delay: 0.12s;
-}
-
-.section-animate .whoami-i,
-.section-animate .whoami-stats,
-.section-animate .exp-card-2 {
-  transition-delay: 0.24s;
-}
-
-.section-animate .whoami-portrait {
-  transition-delay: 0.32s;
-}
-
-.section-animate.is-visible .whoami-who,
-.section-animate.is-visible .whoami-am,
-.section-animate.is-visible .whoami-i,
-.section-animate.is-visible .exp-heading,
-.section-animate.is-visible .skills-reference {
-  animation: section-soft-float 7s ease-in-out 1s infinite;
-}
-
-.section-animate.is-visible .exp-card {
-  animation: section-blob-breathe 8s ease-in-out 1.2s infinite;
-}
-
-@keyframes section-soft-float {
-  0%,
-  100% { translate: 0 0; }
-  50% { translate: 0 -0.45cqw; }
-}
-
-@keyframes section-blob-breathe {
-  0%,
-  100% { scale: 1; }
-  50% { scale: 1.012; }
-}
-
-
-
-@media (prefers-reduced-motion: reduce) {
-  .section-animate .whoami-who,
-  .section-animate .whoami-am,
-  .section-animate .whoami-i,
-  .section-animate .whoami-portrait,
-  .section-animate .whoami-bio,
-  .section-animate .whoami-stats,
-  .section-animate .exp-heading,
-  .section-animate .exp-card,
-  .section-animate .skills-reference {
-    opacity: 1;
-    transform: none;
-    transition: none;
-    animation: none;
+@media (max-width: 1024px) {
+  .hero-stage,
+  .whoami-stage {
+    width: min(100vw, calc(100svh * 1.40625));
   }
 
-  .hero-wordmark,
-  .hero-portrait,
+  .exp-card-1 {
+    left: -5%;
+    width: 53%;
+  }
+
+  .exp-card-2 {
+    right: -3%;
+    width: 54%;
+  }
+
+  .exp-card-1 .exp-card-content {
+    inset: 16% 13% 15% 13%;
+  }
+
+  .exp-card-2 .exp-card-content {
+    inset: 21% 13% 14% 15%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .hero-stage {
+    width: 100vw;
+    min-height: 100svh;
+    aspect-ratio: auto;
+    container-type: normal;
+  }
+
+  .hero-name,
+  .hero-email,
+  .hero-role {
+    font-size: clamp(0.88rem, 3.3vw, 1rem);
+    white-space: normal;
+  }
+
+  .hero-name {
+    left: 20px;
+    top: 22px;
+  }
+
+  .hero-email {
+    right: 20px;
+    top: 22px;
+    max-width: 52vw;
+    text-align: right;
+  }
+
+  .hero-wordmark {
+    top: 15%;
+    left: -18%;
+    width: 136%;
+  }
+
+  .hero-portrait {
+    left: 50%;
+    height: 64%;
+    max-width: none;
+  }
+
+  .hero-social {
+    left: 20px;
+    bottom: 82px;
+    gap: 10px;
+  }
+
+  .hero-social a {
+    gap: 9px;
+    font-size: clamp(0.9rem, 3.6vw, 1.05rem);
+  }
+
+  .hero-social svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .hero-role {
+    right: 20px;
+    bottom: 28px;
+    max-width: 52vw;
+    text-align: right;
+  }
+
+  .whoami-section {
+    min-height: auto;
+    display: block;
+    overflow: visible;
+    padding: 38px 18px 46px;
+  }
+
+  .whoami-stage {
+    width: 100%;
+    aspect-ratio: auto;
+    container-type: normal;
+    display: grid;
+    gap: 18px;
+  }
+
+  .whoami-sr {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    border: 0;
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(4.2rem, 22vw, 7rem);
+    font-weight: 800;
+    line-height: 0.78;
+    color: #6e8a62;
+    text-align: center;
+    letter-spacing: 0;
+  }
+
+  .whoami-who,
+  .whoami-am,
+  .whoami-i {
+    display: none;
+  }
+
+  .whoami-portrait {
+    position: static;
+    width: min(76vw, 330px);
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .whoami-bio {
+    position: static;
+    width: 100%;
+    font-size: clamp(1rem, 4vw, 1.12rem);
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .whoami-stats {
+    position: static;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat-circle {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-size: clamp(2.4rem, 11vw, 4rem);
+  }
+
+  .stat-label {
+    top: 2px;
+    font-size: clamp(0.72rem, 3vw, 0.95rem);
+  }
+
+  .exp-card,
+  .exp-card-1,
+  .exp-card-2 {
+    left: auto;
+    right: auto;
+    top: auto;
+    width: min(calc(100% - 22px), 680px);
+  }
+
+  .exp-card-1 .exp-card-content,
+  .exp-card-2 .exp-card-content {
+    inset: auto;
+  }
+
+  .skills-section {
+    min-height: 100svh;
+    padding: 18px 0;
+  }
+
+  .skills-reference {
+    width: 100vw;
+    height: auto;
+    max-height: calc(100svh - 36px);
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-email {
+    left: 20px;
+    right: auto;
+    top: 48px;
+    max-width: calc(100vw - 40px);
+    text-align: left;
+  }
+
+  .hero-wordmark {
+    top: 18%;
+    left: -26%;
+    width: 152%;
+  }
+
+  .hero-portrait {
+    height: 58%;
+  }
+
+  .hero-role {
+    left: 20px;
+    right: auto;
+    max-width: calc(100vw - 40px);
+    text-align: left;
+  }
+
+  .hero-social {
+    bottom: 84px;
+  }
+
+  .whoami-stats {
+    grid-template-columns: 1fr;
+    max-width: 230px;
+    margin: 0 auto;
+  }
+
+  .exp-card-top {
+    align-items: flex-start;
+  }
+}
+
+/* Scroll-reveal, stagger and parallax for the Who Am I / Experience / Skills
+   sections are now driven by Framer Motion (see App.tsx + animations.ts).
+   The old IntersectionObserver + .section-animate CSS has been removed so the
+   two systems never write to `transform` at the same time. */
+
+/* Smoother hover affordance on the hero social links. These are plain <a>
+   elements, so a CSS transition is the lightweight, rAF-friendly choice. */
+.hero-social a {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hero-social a:hover {
+  transform: translateX(4px);
+}
+
+/* Accessibility: honour the OS "reduce motion" setting.
+   Framer Motion entrance/parallax is already neutralised by
+   <MotionConfig reducedMotion="user">. This block covers the remaining
+   pure-CSS animations (the hero intro fades and link hover shift). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .hero-name,
   .hero-email,
   .hero-social,
   .hero-role {
     animation: none;
+  }
+
+  .hero-social a:hover {
+    transform: none;
   }
 }
